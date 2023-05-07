@@ -94,9 +94,15 @@ def transform_video(iterations):
 
 try:
     get_resolution(file)
-    width_downscaled = round(width / 4) if (width % 2) == 0 else round(width / 4) + 1
+    width_downscaled = (
+        round(width / downscale_by)
+        if (width % 2) == 0
+        else round(width / downscale_by) + 1
+    )
     height_downscaled = (
-        round(height / 4) if (height % 2) == 0 else round(height / 4) + 1
+        round(height / downscale_by)
+        if (height % 2) == 0
+        else round(height / downscale_by) + 1
     )
     transform_video(iterations)
 except subprocess.CalledProcessError:
