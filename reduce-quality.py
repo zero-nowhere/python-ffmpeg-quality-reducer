@@ -63,29 +63,29 @@ def transform_video(iterations):
     while i <= iterations:
         if i == 1:
             transform_res_cmd = f"ffmpeg -i {FILE_PREFIX}.{FILE_EXTENSION} -vf scale={width_downscaled}:{height_downscaled} {FILE_PREFIX}_{i}.{FILE_EXTENSION}"
+            print(transform_res_cmd)
             subprocess.check_output(transform_res_cmd, shell=True)
-            # print(transform_res_cmd)
             i += 1
         if i == iterations:
             transform_res_cmd = f"ffmpeg -i {FILE_PREFIX}_{i-1}.{FILE_EXTENSION} -vf scale={width}:{height} {FILE_PREFIX}_final.{FILE_EXTENSION}"
+            print(transform_res_cmd)
             subprocess.check_output(transform_res_cmd, shell=True)
-            # print(transform_res_cmd)
             if cleanup:
                 rm_cmd = f"rm -f {FILE_PREFIX}_{i-1}.{FILE_EXTENSION}"
                 subprocess.run(rm_cmd, shell=True)
             i += 1
         elif i < iterations and i % 2 == 0:
             transform_res_cmd = f"ffmpeg -i {FILE_PREFIX}_{i-1}.{FILE_EXTENSION} -vf scale={width}:{height} {FILE_PREFIX}_{i}.{FILE_EXTENSION}"
+            print(transform_res_cmd)
             subprocess.check_output(transform_res_cmd, shell=True)
-            # print(transform_res_cmd)
             if cleanup:
                 rm_cmd = f"rm -f {FILE_PREFIX}_{i-1}.{FILE_EXTENSION}"
                 subprocess.run(rm_cmd, shell=True)
             i += 1
         elif i < iterations and i % 2 != 0:
             transform_res_cmd = f"ffmpeg -i {FILE_PREFIX}_{i-1}.{FILE_EXTENSION} -vf scale={width_downscaled}:{height_downscaled} {FILE_PREFIX}_{i}.{FILE_EXTENSION}"
+            print(transform_res_cmd)
             subprocess.check_output(transform_res_cmd, shell=True)
-            # print(transform_res_cmd)
             if cleanup:
                 rm_cmd = f"rm -f {FILE_PREFIX}_{i-1}.{FILE_EXTENSION}"
                 subprocess.run(rm_cmd, shell=True)
@@ -96,13 +96,13 @@ try:
     get_resolution(file)
     width_downscaled = (
         round(width / downscale_by)
-        if (width % 2) == 0
+        if (width / downscale_by % 2) == 0
         else round(width / downscale_by) + 1
     )
     height_downscaled = (
         round(height / downscale_by)
         if (height % 2) == 0
-        else round(height / downscale_by) + 1
+        else round(height / downscale_by % 2) + 1
     )
     transform_video(iterations)
 except subprocess.CalledProcessError:
